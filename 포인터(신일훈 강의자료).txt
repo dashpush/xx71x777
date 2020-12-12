@@ -1,0 +1,240 @@
+예제1===============================
+
+int n = 10;
+    int *n_ptr;
+    n_ptr = &n;
+
+    printf("정수 n의 값: %d\n", n);
+    printf("정수 n의 주소: %d\n", &n);
+    printf("주소 n_ptr의 값: %u\n", n_ptr);
+    printf("주소 n_ptr이 가리키는 값: %d\n", *n_ptr);
+    printf("주소 n_ptr의 주소: %u\n", &n_ptr);
+
+실습1===============================
+#include <stdio.h>
+
+int main() {
+
+    float num, num2, num3;
+    float *ptr, *ptr2, *ptr3;
+    
+    printf("input number: ");
+    scanf("%f", &num);
+    ptr = &num;
+    
+    printf("\ninput number2: ");
+    scanf("%f", &num2);
+    ptr2 = &num2;
+    
+    printf("\ninput number3: ");
+    scanf("%f", &num3);
+    ptr3 = &num3;
+    
+    printf("\ninput number: %f, %f, %f", *ptr, *ptr2, *ptr3);
+    
+    return 0;
+}
+실습1.1===============================
+#include <stdio.h>
+
+int main() {
+    int x[3];
+    int *ptr[3];
+    int i;
+    for(i=0; i<3; i++){
+        printf("input integer: ");
+        scanf("%d", &x[i]);
+        ptr[i] = &x[i];
+    }
+        
+    for(i=0; i<3; i++){
+        printf("integer%d: %d\n", i+1, *ptr[i]);
+    }
+    
+    
+    return 0;
+}
+실습2===============================
+#include <stdio.h>
+void swap_int(int *x, int *y);
+int main() {
+    int a = 1;
+    int b = 5;
+    printf("%d %d\n", a, b);
+    swap_int(&a, &b);
+    printf("%d %d", a, b);
+    return 0;
+}
+// int num, *ptr;
+// num = 3;
+// ptr = &num;
+
+// swap_int에선   *x = &a, *y = &b 처럼 보이지만
+//선언시 *는 변수가 포인터라는 걸 표현할뿐 *x가되서 x의 값(주소)이 가리키는 값이 아니다
+
+void swap_int(int *x, int *y){
+    int temp;
+    
+    temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+실습3===============================
+//실수, 음수, 0, 허수 필터링 못함
+//정수만 입력받는다 가정
+#include <stdio.h>
+
+int getSum(int number, int *result);
+int main() {
+    int n, sum, dcn;
+    //dcn=discriminator
+    printf("input number: ");
+    scanf("%d", &n);
+    
+    dcn = getSum(n, &sum);
+    
+    if(dcn == -1) printf("input error\n");
+    else if(dcn == 0) printf("sum: %d\n", sum);
+    
+    return 0;
+}
+
+int getSum(int number, int *result){
+    int i, s = 0;
+    if(number < 1) return -1;
+    
+    for(i=1; i<=number; i++){
+        s += i;
+    }
+    *result = s;
+    return 0;
+}
+
+실습4===============================
+입력은 정수만 받는다고 가정. 실수,허수x
+#include <stdio.h>
+
+int getPower(int num1, int num2, int *result);
+int main() {
+    int b, exp, pow, dcn; // b:base, exp:exponent
+    
+    printf("input base: ");
+    scanf("%d", &b);
+    printf("input exponent: ");
+    scanf("%d", &exp);
+    
+    dcn = getPower(b, exp, &pow);
+    
+    if(dcn == -1) printf("input error\n");
+    else if(dcn == 0) printf("power: %d\n", pow);
+    
+    return 0;
+}
+
+int getPower(int num1, int num2, int *result){
+    if(num1 <= 0 || num2 <= 0) return -1;
+    
+    int i, s = 1;
+    for(i=1; i<=num2; i++){
+        s *= num1;
+    }
+    *result = s;
+    return 0;
+}
+숙제===============================
+자연수 5개를 배열로 입력받아 제곱수가 몇개인지 출력
+countSquare함수 이용
+ex 1,4,5,27,64 =>3개
+sqrt함수 사용 없이/max 구해서 절반까지만 계속 검사/max도 함수인자로 보내고
+
+#include <stdio.h>
+void countSquare(int n, int *count, int checkNum);
+int main() {
+    int num[5], i, max, cnt=0, untilCheckNum;
+    
+    for(i=0; i<5; i++){
+        printf("input number(%d): ", i+1);
+        scanf("%d", &num[i]);    
+    }
+    max = num[0];
+    for(i=1; i<5; i++)
+        if(max < num[i]) max = num[i];
+    untilCheckNum = max/2;
+    
+    for(i=0; i<5; i++){
+        countSquare(num[i], &cnt, untilCheckNum);    
+    }
+    printf("the number of square number: %d\n", cnt);
+    
+    return 0;
+}
+
+void countSquare(int n, int *count, int checkNum){
+    int i;
+    for(i=1; i<=checkNum; i++){
+        if(i*i == n) (*count)++;
+    }
+
+}
+숙제(ver.2)===============================
+함수사용 없이
+#include <stdio.h>
+
+int main() {
+    int num[5], i, j, max, cnt=0, untilCheckNum;
+    
+    for(i=0; i<5; i++){
+        printf("input number(%d): ", i+1);
+        scanf("%d", &num[i]);    
+    }
+    
+    max = num[0];
+    for(i=1; i<5; i++)
+        if(max < num[i]) max = num[i];   //for문 if문이 1줄로 인식되나 2줄로 인식되나 => 1줄로인식
+    
+    untilCheckNum = max/2;
+    printf("untilCheckNum: %d\n", untilCheckNum);
+    
+    for(i=1; i<=untilCheckNum; i++){
+        for(j=0; j<5; j++){
+            if(i*i == num[j]) cnt++;
+        }
+    }
+    printf("the number of square number: %d\n", cnt);
+    
+    return 0;
+}
+숙제(ver.3)===============================
+math.h사용으로 sqrt, floor 사용함
+#include <stdio.h>
+#include <math.h>
+
+void countSquare(double n, int *count);
+int main() {
+    double num[5];
+    int i, max, cnt=0;
+    
+    for(i=0; i<5; i++){
+        printf("input number(%d): ", i+1);
+        scanf("%lf", &num[i]);    
+    }
+
+    for(i=0; i<5; i++){
+        countSquare(num[i], &cnt);    
+    }
+    printf("the number of square number: %d\n", cnt);
+    
+    return 0;
+}
+
+void countSquare(double n, int *count){
+    if(sqrt(n) == (int)sqrt(n)) (*count)++;
+    //(int)sqrt(n) 대신에 floor(sqrt(n))도 가능
+    //정수형 변수값(5) == 실수형 변수값(5.0)
+}
+
+===============================
+===============================
+===============================
+===============================
